@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportApp", "AirportApp\Ai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibrarieModele", "LibrarieModele\LibrarieModele.csproj", "{F99B38E0-BD3C-4865-8723-B1B0FBA38E20}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdministrareMemorie", "AdministrareMemorie\AdministrareMemorie.csproj", "{BA9DD942-89D2-4059-BA26-4D81AFEE5198}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F99B38E0-BD3C-4865-8723-B1B0FBA38E20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F99B38E0-BD3C-4865-8723-B1B0FBA38E20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F99B38E0-BD3C-4865-8723-B1B0FBA38E20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA9DD942-89D2-4059-BA26-4D81AFEE5198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA9DD942-89D2-4059-BA26-4D81AFEE5198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA9DD942-89D2-4059-BA26-4D81AFEE5198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA9DD942-89D2-4059-BA26-4D81AFEE5198}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

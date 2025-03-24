@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AdministrareMemorie;
+using LibrarieModele;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -34,7 +36,6 @@ namespace AirportApp
                 Console.WriteLine("S. Salvare zbor in vector de obiecte");
                 Console.WriteLine("P. Gasire zboruri dupa tip");
                 Console.WriteLine("D. Gasire zboruri dupa ora");
-                Console.WriteLine("F. Vector scara fisier");
                 Console.WriteLine("R. Citire informatii pasageri de la tastatura");
                 Console.WriteLine("T. Salvare pasager in fisier");
                 Console.WriteLine("X. Inchidere program");
@@ -84,11 +85,7 @@ namespace AirportApp
                         AfisareZbor(newFlight);
                         break;
 
-                    case "F":
-                        Console.WriteLine("Vector scara: ");
-                        ProcessWords("date.txt");
-                        break;
-
+            
                     case "R":
                         newPassenger = CitirePasager();
                         break;
@@ -149,40 +146,6 @@ namespace AirportApp
             {
                 string flightInfo = flights[contor].DisplayFlight();
                 Console.WriteLine(flightInfo);
-            }
-        }
-
-        public static void ProcessWords(string filePath)
-        {
-
-            string[] words = File.ReadAllLines("C:/Users/dudad/source/repos/Airport-App/AirPort-App/AirPort-App/data.txt");
-            string[][] sortedWords = new string[26][];
-
-            for (int i = 0; i < 26; i++)
-            {
-                sortedWords[i] = new string[0];
-            }
-
-            foreach (string word in words)
-            {
-                if (string.IsNullOrWhiteSpace(word)) continue;
-
-                char firstLetter = char.ToLower(word[0]);
-                if (firstLetter >= 'a' && firstLetter <= 'z')
-                {
-                    int index = firstLetter - 'a';
-                    Array.Resize(ref sortedWords[index], sortedWords[index].Length + 1);
-                    sortedWords[index][sortedWords[index].Length - 1] = word;
-                }
-            }
-
-            for (int i = 0; i < 26; i++)
-            {
-                if (sortedWords[i].Length > 0)
-                {
-                    Console.WriteLine($"Litera {(char)('A' + i)}:");
-                    Console.WriteLine(string.Join(", ", sortedWords[i]));
-                }
             }
         }
         public static Passenger CitirePasager()

@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6D8AD79C-17A4-418F-B207-D4B44C332370}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>AirportApp</RootNamespace>
-    <AssemblyName>AirportApp</AssemblyName>
+    <ProjectGuid>{BA9DD942-89D2-4059-BA26-4D81AFEE5198}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AdministrareMemorie</RootNamespace>
+    <AssemblyName>AdministrareMemorie</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,17 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="AdministrareFlight.cs" />
+    <Compile Include="AdministrarePassenger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AdministrareMemorie\AdministrareMemorie.csproj">
-      <Project>{ba9dd942-89d2-4059-ba26-4d81afee5198}</Project>
-      <Name>AdministrareMemorie</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LibrarieModele\LibrarieModele.csproj">
       <Project>{f99b38e0-bd3c-4865-8723-b1b0fba38e20}</Project>
       <Name>LibrarieModele</Name>
