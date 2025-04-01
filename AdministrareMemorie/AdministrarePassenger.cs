@@ -20,16 +20,34 @@ namespace AdministrareMemorie
             streamFisierText.Close();
         }
 
-        public void AddPassenger(Passenger passenger)
+        public void AddPassenger(Passenger passenger, int currentId)
         {
-            // instructiunea 'using' va apela la final streamWriterFisierText.Close();
-            // al doilea parametru setat la 'true' al constructorului StreamWriter indica
-            // modul 'append' de deschidere al fisierului
+            passenger.Id = currentId; // Assign the ID
+
             using (StreamWriter streamWriterFisierText = new StreamWriter(numeFisier, true))
             {
                 streamWriterFisierText.WriteLine(passenger.ConversieLaSir_PentruFisier());
             }
         }
+        public Passenger[] GetPassengers(out int nrPassengers)
+        {
+            Passenger[] passengers = new Passenger[NR_MAX_PASSENGERS];
+
+            using (StreamReader streamReader = new StreamReader(numeFisier))
+            {
+                string linieFisier;
+                nrPassengers = 0;
+
+                while ((linieFisier = streamReader.ReadLine()) != null)
+                {
+                    passengers[nrPassengers++] = new Passenger(linieFisier);
+                }
+            }
+
+            Array.Resize(ref passengers, nrPassengers);
+            return passengers;
+        }
+
 
         public Passenger[] GetStudenti(out int nrPassengers)
         {

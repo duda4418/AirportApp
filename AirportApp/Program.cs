@@ -2,6 +2,7 @@
 using LibrarieModele;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,12 +20,22 @@ namespace AirportApp
             AdministrareFlight adminFlights = new AdministrareFlight();
             Flight newFlight = new Flight();
 
-            // setare locatie fisier in directorul corespunzator solutiei
-            // astfel incat datele din fisier sa poata fi utilizate si de alte proiecte
+            string numeFisier = ConfigurationManager.AppSettings["passengers.txt"];
             string locatieFisierSolutie = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string caleFisierPassenger = locatieFisierSolutie + "\\" + numeFisier;
+            Console.WriteLine($"Calea completă a fișierului: {caleFisierPassenger}");
 
-            string caleCompleta = "C:/Users/dudad/source/repos/Airport-App/AirPort-App/AirPort-App/Passengers.txt";
-            AdministrarePassenger adminPassenger = new AdministrarePassenger(caleCompleta);
+            numeFisier = ConfigurationManager.AppSettings["flights.txt"];
+            locatieFisierSolutie = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string caleFisierFlight = locatieFisierSolutie + "\\" + numeFisier;
+            Console.WriteLine($"Calea completă a fișierului: {caleFisierFlight}");
+
+            AdministrarePassenger adminPassenger = new AdministrarePassenger(caleFisierPassenger);
+            int nrPassengers;
+            Passenger[] existingPassengers = adminPassenger.GetPassengers(out nrPassengers);
+            int nextId = nrPassengers + 1; // Determine next ID
+
+
             Passenger newPassenger = new Passenger();
 
             string optiune;
@@ -85,13 +96,13 @@ namespace AirportApp
                         AfisareZbor(newFlight);
                         break;
 
-            
+
                     case "R":
                         newPassenger = CitirePasager();
                         break;
 
                     case "T":
-                        adminPassenger.AddPassenger(newPassenger);
+                        adminPassenger.AddPassenger(newPassenger, nextId);
 
                         break;
 
@@ -157,7 +168,14 @@ namespace AirportApp
             Console.WriteLine("Introduceti prenumele");
             string name = Console.ReadLine();
 
-            Passenger pasager = new Passenger(name, surname);
+            string numeFisier = ConfigurationManager.AppSettings["passengers.txt"];
+            string locatieFisierSolutie = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string caleFisierPassenger = locatieFisierSolutie + "\\" + numeFisier;
+            AdministrarePassenger adminPassenger = new AdministrarePassenger(caleFisierPassenger);
+            int nrPassengers;
+            Passenger[] existingPassengers = adminPassenger.GetPassengers(out nrPassengers);
+            int nextId = nrPassengers + 1; // Determine next ID
+            Passenger pasager = new Passenger(nextId , name, surname);
 
             return pasager;
         }
