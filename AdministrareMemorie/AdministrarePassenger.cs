@@ -31,22 +31,22 @@ namespace AdministrareMemorie
         }
         public Passenger[] GetPassengers(out int nrPassengers)
         {
-            Passenger[] passengers = new Passenger[NR_MAX_PASSENGERS];
-
-            using (StreamReader streamReader = new StreamReader(numeFisier))
+            Passenger[] passengers = new Passenger[50]; 
+            using (StreamReader reader = new StreamReader(numeFisier))
             {
-                string linieFisier;
+                string line;
                 nrPassengers = 0;
 
-                while ((linieFisier = streamReader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) != null)
                 {
-                    passengers[nrPassengers++] = new Passenger(linieFisier);
+                    passengers[nrPassengers++] = new Passenger(line);
                 }
             }
 
             Array.Resize(ref passengers, nrPassengers);
             return passengers;
         }
+
 
 
         public Passenger[] GetStudenti(out int nrPassengers)
