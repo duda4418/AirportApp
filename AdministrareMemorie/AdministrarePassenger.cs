@@ -20,15 +20,14 @@ namespace AdministrareMemorie
             streamFisierText.Close();
         }
 
-        public void AddPassenger(Passenger passenger, int currentId)
+        public void AddPassenger(Passenger passenger)
         {
-            passenger.Id = currentId; // Assign the ID
-
             using (StreamWriter streamWriterFisierText = new StreamWriter(numeFisier, true))
             {
                 streamWriterFisierText.WriteLine(passenger.ConversieLaSir_PentruFisier());
             }
         }
+
         public Passenger[] GetPassengers(out int nrPassengers)
         {
             Passenger[] passengers = new Passenger[50]; 

@@ -17,8 +17,7 @@ namespace AirportApp
         static void Main(string[] args)
         {
 
-            AdministrareFlight adminFlights = new AdministrareFlight();
-            Flight newFlight = new Flight();
+            
 
             string numeFisier = ConfigurationManager.AppSettings["passengers.txt"];
             string locatieFisierSolutie = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
@@ -30,13 +29,16 @@ namespace AirportApp
             string caleFisierFlight = locatieFisierSolutie + "\\" + numeFisier;
             Console.WriteLine($"Calea completă a fișierului: {caleFisierFlight}");
 
+            AdministrareFlight adminFlights = new AdministrareFlight(caleFisierFlight);
+            Flight newFlight = new Flight();
+
             AdministrarePassenger adminPassenger = new AdministrarePassenger(caleFisierPassenger);
             int nrPassengers;
             Passenger[] existingPassengers = adminPassenger.GetPassengers(out nrPassengers);
             int nextId = nrPassengers + 1; // Determine next ID
 
-
             Passenger newPassenger = new Passenger();
+
 
             string optiune;
             do
@@ -73,8 +75,7 @@ namespace AirportApp
                     case "S":
                         int flightId = nrFlights + 1;
                         newFlight.flightId = flightId;
-                        adminFlights.AddFlight(newFlight);
-
+                        adminFlights.AddFlight(newFlight); 
                         break;
                     case "X":
                         return;
@@ -102,8 +103,7 @@ namespace AirportApp
                         break;
 
                     case "T":
-                        adminPassenger.AddPassenger(newPassenger, nextId);
-
+                        adminPassenger.AddPassenger(newPassenger);
                         break;
 
                     default:
@@ -161,12 +161,17 @@ namespace AirportApp
         }
         public static Passenger CitirePasager()
         {
-
-            Console.WriteLine("Introduceti numele");
+            Console.WriteLine("Introduceti numele:");
             string surname = Console.ReadLine();
 
-            Console.WriteLine("Introduceti prenumele");
+            Console.WriteLine("Introduceti prenumele:");
             string name = Console.ReadLine();
+
+            Console.WriteLine("Introduceti ID-ul zborului:");
+            int flightId = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Introduceti numarul locului (ex: 12A):");
+            string seatNumber = Console.ReadLine();
 
             string numeFisier = ConfigurationManager.AppSettings["passengers.txt"];
             string locatieFisierSolutie = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
@@ -174,10 +179,12 @@ namespace AirportApp
             AdministrarePassenger adminPassenger = new AdministrarePassenger(caleFisierPassenger);
             int nrPassengers;
             Passenger[] existingPassengers = adminPassenger.GetPassengers(out nrPassengers);
-            int nextId = nrPassengers + 1; // Determine next ID
-            Passenger pasager = new Passenger(nextId , name, surname);
+            int nextId = nrPassengers + 1;
+
+            Passenger pasager = new Passenger(nextId, name, surname, flightId, seatNumber);
 
             return pasager;
         }
+
     }
 }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using LibrarieModele;
 using AdministrareMemorie;
+using Microsoft.VisualBasic;
 
 
 namespace AirportAppUI
@@ -16,6 +17,8 @@ namespace AirportAppUI
     public partial class Form1 : Form
     {
         private AdministrarePassenger adminPassenger;
+        private AdministrareFlight adminFlight;
+
 
         public Form1()
         {
@@ -23,7 +26,55 @@ namespace AirportAppUI
             string filePath = "A:/AirportApp/passengers.txt";
             adminPassenger = new AdministrarePassenger(filePath);
             LoadPassengers();
+
+            string flightPath = "A:/AirportApp/flights.txt";
+            adminFlight = new AdministrareFlight(flightPath);
+            LoadFlights();
+
         }
+        private void LoadFlights()
+        {
+            int nrFlights;
+            Flight[] flights = adminFlight.GetFlights(out nrFlights);
+            dgvFlights.DataSource = new List<Flight>(flights);
+        }
+
+        private void btnAddPassenger_Click(object sender, EventArgs e)
+        {
+            // Temporary input via InputBox-style dialogs (can be replaced with textboxes later)
+            string name = Prompt("Enter name:");
+            string surname = Prompt("Enter surname:");
+            string seat = Prompt("Enter seat number:");
+            int flightId = int.Parse(Prompt("Enter flight ID:"));
+
+            int nrPassengers;
+            adminPassenger.GetPassengers(out nrPassengers);
+            Passenger passenger = new Passenger(nrPassengers + 1, name, surname, flightId, seat);
+            adminPassenger.AddPassenger(passenger);
+            LoadPassengers();
+        }
+
+        private void btnAddFlight_Click(object sender, EventArgs e)
+        {
+            string type = Prompt("Enter flight type (Arrival/Departure):");
+            string city = Prompt("Enter city:");
+            double time = double.Parse(Prompt("Enter time (ex: 13.30):"));
+            int gate = int.Parse(Prompt("Enter gate:"));
+            string status = Prompt("Enter status:");
+
+            int nrFlights;
+            adminFlight.GetFlights(out nrFlights);
+            Flight flight = new Flight(city, time, gate, status, type, nrFlights + 1);
+            adminFlight.AddFlight(flight);
+            LoadFlights();
+        }
+
+        // Utility method for prompting
+        private string Prompt(string message)
+        {
+            return Microsoft.VisualBasic.Interaction.InputBox(message, "Input Required", "");
+        }
+
 
         private void LoadPassengers()
         {
