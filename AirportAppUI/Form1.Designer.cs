@@ -1,4 +1,8 @@
-﻿namespace AirportAppUI
+﻿using System.Drawing;
+using System.Windows.Forms;
+using System;
+
+namespace AirportAppUI
 {
     partial class Form1
     {
@@ -10,55 +14,91 @@
 
         private void InitializeComponent()
         {
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.SuspendLayout();
+            this.components = new System.ComponentModel.Container();
+            this.Text = "Airport Management App";
+            this.ClientSize = new System.Drawing.Size(1000, 700);
+            this.StartPosition = FormStartPosition.CenterScreen;
 
-            // dataGridView1
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 12);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(760, 425);
-            this.dataGridView1.TabIndex = 0;
+            // Passengers Label
+            Label lblPassengers = new Label();
+            lblPassengers.Text = "Passengers";
+            lblPassengers.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            lblPassengers.Location = new Point(20, 20);
+            lblPassengers.AutoSize = true;
+            this.Controls.Add(lblPassengers);
 
-            // Form1
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            // Passenger Grid
+            this.dataGridView1 = new DataGridView();
+            this.dataGridView1.Location = new Point(20, 50);
+            this.dataGridView1.Size = new Size(950, 250);
+            this.dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            this.dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             this.Controls.Add(this.dataGridView1);
-            this.Name = "Form1";
-            this.Text = "Passenger Management";
 
-            this.dgvFlights = new System.Windows.Forms.DataGridView();
-            this.btnAddPassenger = new System.Windows.Forms.Button();
-            this.btnAddFlight = new System.Windows.Forms.Button();
-
-            // dgvFlights
-            this.dgvFlights.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvFlights.Location = new System.Drawing.Point(12, 450);
-            this.dgvFlights.Name = "dgvFlights";
-            this.dgvFlights.Size = new System.Drawing.Size(760, 200);
-            this.dgvFlights.TabIndex = 1;
-
-            // btnAddPassenger
+            // Add Passenger Button
+            this.btnAddPassenger = new Button();
             this.btnAddPassenger.Text = "Add Passenger";
-            this.btnAddPassenger.Location = new System.Drawing.Point(12, 660);
-            this.btnAddPassenger.Click += new System.EventHandler(this.btnAddPassenger_Click);
-
-            // btnAddFlight
-            this.btnAddFlight.Text = "Add Flight";
-            this.btnAddFlight.Location = new System.Drawing.Point(130, 660);
-            this.btnAddFlight.Click += new System.EventHandler(this.btnAddFlight_Click);
-
-            // Add controls to Form
-            this.Controls.Add(this.dgvFlights);
+            this.btnAddPassenger.Font = new Font("Segoe UI", 10, FontStyle.Regular);
+            this.btnAddPassenger.Size = new Size(150, 40);
+            this.btnAddPassenger.Location = new Point(20, 310);
+            this.btnAddPassenger.Click += new EventHandler(this.btnAddPassenger_Click);
             this.Controls.Add(this.btnAddPassenger);
+
+            // Flights Label
+            Label lblFlights = new Label();
+            lblFlights.Text = "Flights";
+            lblFlights.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            lblFlights.Location = new Point(20, 370);
+            lblFlights.AutoSize = true;
+            this.Controls.Add(lblFlights);
+
+            // Flights Grid
+            this.dgvFlights = new DataGridView();
+            this.dgvFlights.Location = new Point(20, 400);
+            this.dgvFlights.Size = new Size(950, 200);
+            this.dgvFlights.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            this.dgvFlights.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            this.Controls.Add(this.dgvFlights);
+
+            // Add Flight Button
+            this.btnAddFlight = new Button();
+            this.btnAddFlight.Text = "Add Flight";
+            this.btnAddFlight.Font = new Font("Segoe UI", 10, FontStyle.Regular);
+            this.btnAddFlight.Size = new Size(150, 40);
+            this.btnAddFlight.Location = new Point(20, 610);
+            this.btnAddFlight.Click += new EventHandler(this.btnAddFlight_Click);
             this.Controls.Add(this.btnAddFlight);
 
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.ResumeLayout(false);
+            // --- Passenger Search ---
+            TextBox txtSearchPassenger = new TextBox();
+            txtSearchPassenger.Name = "txtSearchPassenger";
+            txtSearchPassenger.Size = new Size(200, 30);
+            txtSearchPassenger.Location = new Point(200, 310);
+            this.Controls.Add(txtSearchPassenger);
+
+            Button btnSearchPassenger = new Button();
+            btnSearchPassenger.Text = "Search Passenger";
+            btnSearchPassenger.Size = new Size(150, 40);
+            btnSearchPassenger.Location = new Point(410, 305);
+            btnSearchPassenger.Click += new EventHandler(this.btnSearchPassenger_Click);
+            this.Controls.Add(btnSearchPassenger);
+
+            // --- Flight Search ---
+            TextBox txtSearchFlight = new TextBox();
+            txtSearchFlight.Name = "txtSearchFlight";
+            txtSearchFlight.Size = new Size(200, 30);
+            txtSearchFlight.Location = new Point(200, 610);
+            this.Controls.Add(txtSearchFlight);
+
+            Button btnSearchFlight = new Button();
+            btnSearchFlight.Text = "Search Flight";
+            btnSearchFlight.Size = new Size(150, 40);
+            btnSearchFlight.Location = new Point(410, 605);
+            btnSearchFlight.Click += new EventHandler(this.btnSearchFlight_Click);
+            this.Controls.Add(btnSearchFlight);
+
         }
+
 
     }
 }
-

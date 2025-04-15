@@ -1,1 +1,2 @@
 1;LAS;13.2;13;Ontime;Arrival
+2;ATH;14.5;12;Delayed;Departure

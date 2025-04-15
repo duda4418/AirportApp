@@ -30,7 +30,7 @@ namespace AdministrareMemorie
 
         public Passenger[] GetPassengers(out int nrPassengers)
         {
-            Passenger[] passengers = new Passenger[50]; 
+            Passenger[] passengers = new Passenger[50];
             using (StreamReader reader = new StreamReader(numeFisier))
             {
                 string line;

@@ -84,6 +84,41 @@ namespace AirportAppUI
             // Binding data to DataGridView
             dataGridView1.DataSource = new List<Passenger>(passengers);
         }
+        private void btnSearchPassenger_Click(object sender, EventArgs e)
+        {
+            TextBox txtSearch = this.Controls.Find("txtSearchPassenger", true).FirstOrDefault() as TextBox;
+            if (txtSearch != null)
+            {
+                string search = txtSearch.Text.Trim().ToLower();
+                int nrPassengers;
+                Passenger[] passengers = adminPassenger.GetPassengers(out nrPassengers);
+                var filtered = passengers.Where(p =>
+                    p.Name.ToLower().Contains(search) ||
+                    p.Surname.ToLower().Contains(search)).ToList();
+                dataGridView1.DataSource = filtered;
+            }
+        }
+
+        private void btnSearchFlight_Click(object sender, EventArgs e)
+        {
+            TextBox txtSearch = this.Controls.Find("txtSearchFlight", true).FirstOrDefault() as TextBox;
+            if (txtSearch != null)
+            {
+                string search = txtSearch.Text.Trim().ToLower();
+                int nrFlights;
+                Flight[] flights = adminFlight.GetFlights(out nrFlights);
+
+                var filtered = flights
+                    .Where(f => f != null &&
+                                (f.city != null && f.city.ToLower().Contains(search) ||
+                                 f.flightType != null && f.flightType.ToLower().Contains(search)))
+                    .ToList();
+
+                dgvFlights.DataSource = filtered;
+            }
+        }
+
+
     }
 
 }
