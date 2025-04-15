@@ -97,6 +97,21 @@ namespace AirportAppUI
             btnSearchFlight.Click += new EventHandler(this.btnSearchFlight_Click);
             this.Controls.Add(btnSearchFlight);
 
+            // lblName
+            lblName = new Label();
+            lblName.Text = "Name:";
+            lblName.Location = new Point(12, 500);
+            lblName.ForeColor = Color.Black;
+            this.Controls.Add(lblName);
+
+            // lblSurname
+            lblSurname = new Label();
+            lblSurname.Text = "Surname:";
+            lblSurname.Location = new Point(12, 530);
+            lblSurname.ForeColor = Color.Black;
+            this.Controls.Add(lblSurname);
+
+
         }
 
 

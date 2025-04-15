@@ -1,2 +1,4 @@
 1;Serban;David;12345;13C
 2;Sara;Serban;12345;12D
+3;Serban;Damaris;12345;7A
+4;Onofrei;Vlaf;12345;69A

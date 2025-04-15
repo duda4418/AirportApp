@@ -18,6 +18,10 @@ namespace AirportAppUI
     {
         private AdministrarePassenger adminPassenger;
         private AdministrareFlight adminFlight;
+        private const int MAX_NAME_LENGTH = 10;
+        private const int MAX_SURNAME_LENGTH = 10;
+        private Label lblName;
+        private Label lblSurname;
 
 
         public Form1()
@@ -41,18 +45,45 @@ namespace AirportAppUI
 
         private void btnAddPassenger_Click(object sender, EventArgs e)
         {
-            // Temporary input via InputBox-style dialogs (can be replaced with textboxes later)
+            // Reset label colors
+            lblName.ForeColor = Color.Black;
+            lblSurname.ForeColor = Color.Black;
+
             string name = Prompt("Enter name:");
             string surname = Prompt("Enter surname:");
+
+            bool isValid = true;
+            StringBuilder errors = new StringBuilder();
+
+            if (name.Length > MAX_NAME_LENGTH)
+            {
+                lblName.ForeColor = Color.Red;
+                errors.AppendLine($"Name must be max {MAX_NAME_LENGTH} characters.");
+                isValid = false;
+            }
+
+            if (surname.Length > MAX_SURNAME_LENGTH)
+            {
+                lblSurname.ForeColor = Color.Red;
+                errors.AppendLine($"Surname must be max {MAX_SURNAME_LENGTH} characters.");
+                isValid = false;
+            }
+
+            if (!isValid)
+            {
+                MessageBox.Show(errors.ToString(), "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             string seat = Prompt("Enter seat number:");
             int flightId = int.Parse(Prompt("Enter flight ID:"));
-
             int nrPassengers;
             adminPassenger.GetPassengers(out nrPassengers);
             Passenger passenger = new Passenger(nrPassengers + 1, name, surname, flightId, seat);
             adminPassenger.AddPassenger(passenger);
             LoadPassengers();
         }
+
 
         private void btnAddFlight_Click(object sender, EventArgs e)
         {
