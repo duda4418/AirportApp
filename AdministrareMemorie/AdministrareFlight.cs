@@ -61,12 +61,13 @@ namespace AdministrareMemorie
             return flights;
         }
 
-        public Flight[] GetFlightType(string type, out int nrFlights)
+        // Updated to use FlightType enum
+        public Flight[] GetFlightType(FlightType type, out int nrFlights)
         {
             Flight[] flightList = new Flight[NR_MAX_FLIGHTS];
             int cnt = 0;
 
-            for (int i = 0; i < flights.Length; i++)
+            for (int i = 0; i < this.nrFlights; i++)
             {
                 if (flights[i] != null && flights[i].flightType == type)
                 {
@@ -78,15 +79,47 @@ namespace AdministrareMemorie
             return flightList;
         }
 
+        // Overload to maintain backward compatibility with string input
+        public Flight[] GetFlightType(string typeString, out int nrFlights)
+        {
+            if (Enum.TryParse(typeString, out FlightType type))
+            {
+                return GetFlightType(type, out nrFlights);
+            }
+
+            // If parsing failed, return empty array
+            nrFlights = 0;
+            return new Flight[0];
+        }
+
+        // Get flights by status
+        public Flight[] GetFlightsByStatus(FlightStatus status, out int nrFlights)
+        {
+            Flight[] flightList = new Flight[NR_MAX_FLIGHTS];
+            int cnt = 0;
+
+            for (int i = 0; i < this.nrFlights; i++)
+            {
+                // Check if flight has ANY of the specified status flags
+                if (flights[i] != null && (flights[i].status & status) != 0)
+                {
+                    flightList[cnt++] = flights[i];
+                }
+            }
+
+            nrFlights = cnt;
+            return flightList;
+        }
+
         public Flight GetFlightDestination(double time)
         {
-            for (int i = 0; i < flights.Length; i++)
+            for (int i = 0; i < this.nrFlights; i++)
             {
                 if (flights[i] != null && flights[i].time == time)
                     return flights[i];
             }
 
-            return new Flight("", 0, 0, "", "", 0);
+            return new Flight("", 0, 0, FlightStatus.None, FlightType.Unknown, 0);
         }
     }
 }
