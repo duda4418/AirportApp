@@ -24,6 +24,8 @@ namespace AirportAppUI
         public Form1()
         {
             InitializeComponent();
+            SetupListViews();
+
 
             // Initialize error provider
             errorProvider = new ErrorProvider();
@@ -43,6 +45,26 @@ namespace AirportAppUI
             // Load initial data
             LoadFlights();
             LoadPassengers();
+        }
+        // In Form1 constructor after InitializeComponent();
+        private void SetupListViews()
+        {
+            // Flights ListView
+            lstFlights.View = View.Details;
+            lstFlights.Columns.Add("Flight ID", 80);
+            lstFlights.Columns.Add("City", 150);
+            lstFlights.Columns.Add("Time", 80);
+            lstFlights.Columns.Add("Gate", 80);
+            lstFlights.Columns.Add("Status", 150);
+            lstFlights.Columns.Add("Type", 100);
+
+            // Passengers ListView
+            lstPassengers.View = View.Details;
+            lstPassengers.Columns.Add("ID", 50);
+            lstPassengers.Columns.Add("Name", 150);
+            lstPassengers.Columns.Add("Surname", 150);
+            lstPassengers.Columns.Add("Flight ID", 80);
+            lstPassengers.Columns.Add("Seat", 80);
         }
 
         #region Setup Controls

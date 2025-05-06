@@ -32,7 +32,7 @@ namespace AirportAppUI
         private TabPage tabPassengers;
 
         // Flight tab controls
-        private ListBox lstFlights;
+        private ListView lstFlights;
         private Panel pnlAddFlight;
         private Label lblFlightCity;
         private TextBox txtFlightCity;
@@ -59,7 +59,7 @@ namespace AirportAppUI
         private ErrorProvider errorProvider;
 
         // Passenger tab controls
-        private ListBox lstPassengers;
+        private ListView lstPassengers;
         private Panel pnlAddPassenger;
         private Label lblPassengerId;
         private TextBox txtPassengerId;
@@ -98,7 +98,7 @@ namespace AirportAppUI
             this.tabPassengers = new System.Windows.Forms.TabPage();
 
             // Flight tab controls initialization
-            this.lstFlights = new System.Windows.Forms.ListBox();
+            this.lstFlights = new System.Windows.Forms.ListView();
             this.pnlAddFlight = new System.Windows.Forms.Panel();
             this.lblFlightCity = new System.Windows.Forms.Label();
             this.txtFlightCity = new System.Windows.Forms.TextBox();
@@ -124,7 +124,7 @@ namespace AirportAppUI
             this.btnClearFlightSearch = new System.Windows.Forms.Button();
 
             // Passenger tab controls initialization
-            this.lstPassengers = new System.Windows.Forms.ListBox();
+            this.lstPassengers = new System.Windows.Forms.ListView();
             this.pnlAddPassenger = new System.Windows.Forms.Panel();
             this.lblPassengerId = new System.Windows.Forms.Label();
             this.txtPassengerId = new System.Windows.Forms.TextBox();
@@ -184,7 +184,7 @@ namespace AirportAppUI
             this.lstFlights.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lstFlights.FormattingEnabled = true;
+            //this.lstFlights.FormattingEnabled = true;
             this.lstFlights.Location = new System.Drawing.Point(6, 150);
             this.lstFlights.Name = "lstFlights";
             this.lstFlights.Size = new System.Drawing.Size(980, 511);
@@ -331,7 +331,7 @@ namespace AirportAppUI
 
             // Flight Search Panel
             this.pnlFlightSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-            System.Windows.Forms.AnchorStyles.Right)));
+            |System.Windows.Forms.AnchorStyles.Right)));
             this.pnlFlightSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlFlightSearch.Location = new System.Drawing.Point(6, 97);
             this.pnlFlightSearch.Name = "pnlFlightSearch";
@@ -376,7 +376,7 @@ namespace AirportAppUI
             this.btnSearchFlights.TabIndex = 3;
             this.btnSearchFlights.Text = "Search";
             this.btnSearchFlights.UseVisualStyleBackColor = true;
-            //this.btnSearchFlights.Click += new System.EventHandler(this.btnSearchFlights_Click);
+            this.btnSearchFlights.Click += new System.EventHandler(this.btnSearchFlights_Click);
             this.pnlFlightSearch.Controls.Add(this.btnSearchFlights);
 
             // Show Only On Time Checkbox
@@ -414,7 +414,7 @@ namespace AirportAppUI
             this.lstPassengers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lstPassengers.FormattingEnabled = true;
+            //this.lstPassengers.FormattingEnabled = true;
             this.lstPassengers.Location = new System.Drawing.Point(6, 150);
             this.lstPassengers.Name = "lstPassengers";
             this.lstPassengers.Size = new System.Drawing.Size(980, 511);
@@ -790,5 +790,39 @@ namespace AirportAppUI
                 errorProvider.SetError(txtPassengerSeatNumber, "");
             }
         }
+        private void btnSearchFlights_Click(object sender, EventArgs e)
+        {
+            string searchText = txtSearchFlights.Text.ToLower();
+            string searchType = cmbFlightSearchType.SelectedItem.ToString();
+            bool showOnlyOnTime = chkShowOnlyOnTime.Checked;
+
+            foreach (ListViewItem item in lstFlights.Items)
+            {
+                bool matches = false;
+
+                // Example: assuming your ListView has subitems like City, Gate, Flight ID
+                switch (searchType)
+                {
+                    case "City":
+                        matches = item.SubItems[0].Text.ToLower().Contains(searchText);
+                        break;
+                    case "Gate":
+                        matches = item.SubItems[1].Text.ToLower().Contains(searchText);
+                        break;
+                    case "Flight ID":
+                        matches = item.SubItems[2].Text.ToLower().Contains(searchText);
+                        break;
+                }
+
+                // Optional filter: On Time
+                if (showOnlyOnTime && item.SubItems[3].Text != "On Time")
+                {
+                    matches = false;
+                }
+
+               // item.Visible = matches;
+            }
+        }
+
     }
 }
