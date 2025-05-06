@@ -30,23 +30,32 @@ namespace AdministrareMemorie
 
         public Passenger[] GetPassengers(out int nrPassengers)
         {
-            Passenger[] passengers = new Passenger[50];
-            using (StreamReader reader = new StreamReader(numeFisier))
-            {
-                string line;
-                nrPassengers = 0;
+            Passenger[] passengers = new Passenger[NR_MAX_PASSENGERS];
+            nrPassengers = 0;
 
-                while ((line = reader.ReadLine()) != null)
+            try
+            {
+                using (StreamReader reader = new StreamReader(numeFisier))
                 {
-                    passengers[nrPassengers++] = new Passenger(line);
+                    string line;
+                    while ((line = reader.ReadLine()) != null && nrPassengers < NR_MAX_PASSENGERS)
+                    {
+                        if (!string.IsNullOrWhiteSpace(line))
+                        {
+                            passengers[nrPassengers] = new Passenger(line);
+                            nrPassengers++;
+                        }
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+               // MessageBox.Show($"Error loading passengers: {ex.Message}");
             }
 
             Array.Resize(ref passengers, nrPassengers);
             return passengers;
         }
-
-
 
         public Passenger[] GetStudenti(out int nrPassengers)
         {

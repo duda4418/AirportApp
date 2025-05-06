@@ -27,6 +27,7 @@ namespace AirportAppUI
             SetupListViews();
 
 
+
             // Initialize error provider
             errorProvider = new ErrorProvider();
             errorProvider.BlinkStyle = ErrorBlinkStyle.NeverBlink;
@@ -428,8 +429,6 @@ namespace AirportAppUI
                 txtPassengerFlightId.Text = selectedPassenger.FlightId.ToString();
                 txtPassengerSeatNumber.Text = selectedPassenger.SeatNumber;
 
-                // Check Frequent Flyer Status (this would normally be from a database)
-                // For demonstration purposes, we'll just check it randomly
                 checkBoxFrequentFlyer.Checked = selectedPassenger.Id % 2 == 0;
             }
         }

@@ -78,11 +78,9 @@ namespace AirportAppUI
         private Button btnSearchPassengers;
         private Button btnClearPassengerSearch;
         private CheckBox chkShowAllPassengers;
+        private ComboBox cmbPassengerSearchType;
 
-        // Add with other flight controls
         private CheckedListBox checkListBoxFlightStatusFlags;
-
-        // Add with other passenger controls
         private CheckBox checkBoxFrequentFlyer;
 
         /// <summary>
@@ -387,7 +385,7 @@ namespace AirportAppUI
             this.chkShowOnlyOnTime.TabIndex = 4;
             this.chkShowOnlyOnTime.Text = "Show Only On Time";
             this.chkShowOnlyOnTime.UseVisualStyleBackColor = true;
-            //this.chkShowOnlyOnTime.CheckedChanged += new System.EventHandler(this.chkShowOnlyOnTime_CheckedChanged);
+            this.chkShowOnlyOnTime.CheckedChanged += new System.EventHandler(this.btnClearPassengerSearch_Click);
             this.pnlFlightSearch.Controls.Add(this.chkShowOnlyOnTime);
 
             // Clear Flight Search Button
@@ -397,7 +395,7 @@ namespace AirportAppUI
             this.btnClearFlightSearch.TabIndex = 5;
             this.btnClearFlightSearch.Text = "Clear";
             this.btnClearFlightSearch.UseVisualStyleBackColor = true;
-            //this.btnClearFlightSearch.Click += new System.EventHandler(this.btnClearFlightSearch_Click);
+            this.btnClearFlightSearch.Click += new System.EventHandler(this.btnClearFlightSearch_Click);
             this.pnlFlightSearch.Controls.Add(this.btnClearFlightSearch);
 
             // Passengers Tab
@@ -554,7 +552,7 @@ namespace AirportAppUI
             this.btnSearchPassengers.TabIndex = 2;
             this.btnSearchPassengers.Text = "Search";
             this.btnSearchPassengers.UseVisualStyleBackColor = true;
-            //this.btnSearchPassengers.Click += new System.EventHandler(this.btnSearchPassengers_Click);
+            this.btnSearchPassengers.Click += new System.EventHandler(this.btnSearchPassengers_Click);
             this.pnlPassengerSearch.Controls.Add(this.btnSearchPassengers);
 
             // Clear Passenger Search Button
@@ -564,7 +562,7 @@ namespace AirportAppUI
             this.btnClearPassengerSearch.TabIndex = 3;
             this.btnClearPassengerSearch.Text = "Clear";
             this.btnClearPassengerSearch.UseVisualStyleBackColor = true;
-            //this.btnClearPassengerSearch.Click += new System.EventHandler(this.btnClearPassengerSearch_Click);
+            this.btnClearPassengerSearch.Click += new System.EventHandler(this.btnClearPassengerSearch_Click);
             this.pnlPassengerSearch.Controls.Add(this.btnClearPassengerSearch);
 
             // Show All Passengers Checkbox
@@ -792,37 +790,119 @@ namespace AirportAppUI
         }
         private void btnSearchFlights_Click(object sender, EventArgs e)
         {
-            string searchText = txtSearchFlights.Text.ToLower();
-            string searchType = cmbFlightSearchType.SelectedItem.ToString();
-            bool showOnlyOnTime = chkShowOnlyOnTime.Checked;
+            string searchValue = txtSearchFlights.Text.Trim().ToLower();
+            string searchType = cmbFlightSearchType.SelectedItem?.ToString() ?? "City";
 
-            foreach (ListViewItem item in lstFlights.Items)
+            int nrFlights;
+            Flight[] flights = adminFlight.GetFlights(out nrFlights);
+
+            lstFlights.Items.Clear();
+
+            for (int i = 0; i < nrFlights; i++)
             {
-                bool matches = false;
+                if (flights[i] != null)
+                {
+                    bool match = false;
+                    string propertyValue = "";
 
-                // Example: assuming your ListView has subitems like City, Gate, Flight ID
+                    // Get property value based on search type
+                    switch (searchType)
+                    {
+                        case "City":
+                            propertyValue = flights[i].city.ToLower();
+                            break;
+                        case "Gate":
+                            propertyValue = flights[i].gate.ToString();
+                            break;
+                        case "Flight ID":
+                            propertyValue = flights[i].flightId.ToString();
+                            break;
+                    }
+
+                    match = propertyValue.Contains(searchValue);
+
+                    if (match)
+                    {
+                        // Add matching flight to ListView
+                        ListViewItem item = new ListViewItem(flights[i].flightId.ToString());
+                        item.SubItems.Add(flights[i].city);
+                        item.SubItems.Add(flights[i].time.ToString());
+                        item.SubItems.Add(flights[i].gate.ToString());
+                        item.SubItems.Add(flights[i].GetStatusString());
+                        item.SubItems.Add(flights[i].flightType.ToString());
+                        item.Tag = flights[i];
+                        lstFlights.Items.Add(item);
+                    }
+                }
+            }
+        }
+        private void btnSearchPassengers_Click(object sender, EventArgs e)
+        {
+            string searchValue = txtSearchPassengers.Text.Trim().ToLower();
+            string searchType = cmbPassengerSearchType?.SelectedItem?.ToString() ?? "Name"; // Default to "Name"
+
+            int nrPassengers;
+            Passenger[] passengers = adminPassenger.GetPassengers(out nrPassengers);
+
+            lstPassengers.Items.Clear();
+
+            // Check if passengers array is valid
+            if (passengers == null || nrPassengers == 0)
+                return;
+
+            for (int i = 0; i < nrPassengers; i++)
+            {
+                Passenger passenger = passengers[i];
+                if (passenger == null) // Skip null passenger entries
+                    continue;
+
+                bool match = false;
+                string propertyValue = "";
+
                 switch (searchType)
                 {
-                    case "City":
-                        matches = item.SubItems[0].Text.ToLower().Contains(searchText);
+                    case "Name":
+                        propertyValue = passenger.Name?.ToLower() ?? ""; // Handle null Name
                         break;
-                    case "Gate":
-                        matches = item.SubItems[1].Text.ToLower().Contains(searchText);
+                    case "Surname":
+                        propertyValue = passenger.Surname?.ToLower() ?? ""; // Handle null Surname
                         break;
                     case "Flight ID":
-                        matches = item.SubItems[2].Text.ToLower().Contains(searchText);
+                        propertyValue = passenger.FlightId.ToString();
+                        break;
+                    case "Seat":
+                        propertyValue = passenger.SeatNumber?.ToLower() ?? ""; // Handle null SeatNumber
                         break;
                 }
 
-                // Optional filter: On Time
-                if (showOnlyOnTime && item.SubItems[3].Text != "On Time")
-                {
-                    matches = false;
-                }
+                match = !string.IsNullOrEmpty(propertyValue) && propertyValue.Contains(searchValue);
 
-               // item.Visible = matches;
+                if (match)
+                {
+                    ListViewItem item = new ListViewItem(passenger.Id.ToString());
+                    item.SubItems.Add(passenger.Name ?? "N/A"); // Handle missing data
+                    item.SubItems.Add(passenger.Surname ?? "N/A");
+                    item.SubItems.Add(passenger.FlightId.ToString());
+                    item.SubItems.Add(passenger.SeatNumber ?? "N/A");
+                    item.Tag = passenger;
+                    lstPassengers.Items.Add(item);
+                }
             }
         }
 
+        // For Flights
+        private void btnClearFlightSearch_Click(object sender, EventArgs e)
+        {
+            txtSearchFlights.Text = "";
+            LoadFlights();
+        }
+
+        // For Passengers
+        private void btnClearPassengerSearch_Click(object sender, EventArgs e)
+        {
+            txtSearchPassengers.Text = "";
+            LoadPassengers(); 
+        }
     }
+
 }
