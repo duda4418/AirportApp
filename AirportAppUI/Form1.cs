@@ -25,6 +25,9 @@ namespace AirportAppUI
         {
             InitializeComponent();
             SetupListViews();
+            txtPassengerId.Enabled = false;
+            txtFlightId.Enabled = false;
+
 
 
 
@@ -52,6 +55,9 @@ namespace AirportAppUI
         {
             // Flights ListView
             lstFlights.View = View.Details;
+            lstFlights.FullRowSelect = true; // Allow full-row selection
+            lstFlights.MultiSelect = false;  // Disable multi-selection
+            lstFlights.HideSelection = false; // Keep selection visible
             lstFlights.Columns.Add("Flight ID", 80);
             lstFlights.Columns.Add("City", 150);
             lstFlights.Columns.Add("Time", 80);
@@ -61,6 +67,9 @@ namespace AirportAppUI
 
             // Passengers ListView
             lstPassengers.View = View.Details;
+            lstPassengers.FullRowSelect = true;
+            lstPassengers.MultiSelect = false;
+            lstPassengers.HideSelection = false;
             lstPassengers.Columns.Add("ID", 50);
             lstPassengers.Columns.Add("Name", 150);
             lstPassengers.Columns.Add("Surname", 150);
@@ -148,12 +157,27 @@ namespace AirportAppUI
             // Clear any previous errors
             errorProvider.Clear();
 
-            // Validate Flight ID
-            if (!ValidateFlightId(txtFlightId.Text))
+            // Generate Flight ID
+            int nrFlights;
+            Flight[] flights = adminFlight.GetFlights(out nrFlights);
+
+            // Handle null/empty case
+            int maxFlightId = 0;
+            if (flights != null && nrFlights > 0)
             {
-                errorProvider.SetError(txtFlightId, "Flight ID must be a positive integer");
-                return;
+                maxFlightId = flights.Take(nrFlights)  // Only consider populated entries
+                                  .Where(f => f != null)  // Filter out nulls
+                                  .Max(f => f.flightId);
             }
+
+            int flightId = maxFlightId + 1;
+
+            // Validate Flight ID
+            //if (!ValidateFlightId(txtFlightId.Text))
+            //{
+            //    errorProvider.SetError(txtFlightId, "Flight ID must be a positive integer");
+            //    return;
+            //}
 
             // Validate City
             if (!ValidateCity(txtFlightCity.Text))
@@ -177,7 +201,7 @@ namespace AirportAppUI
             }
 
             // All validations passed, create and add the flight
-            int flightId = int.Parse(txtFlightId.Text);
+            //int flightId = int.Parse(txtFlightId.Text);
             string city = txtFlightCity.Text;
             double time = double.Parse(txtFlightTime.Text);
             int gate = int.Parse(txtFlightGate.Text);
@@ -262,6 +286,9 @@ namespace AirportAppUI
             {
                 Flight selectedFlight = (Flight)e.Item.Tag;
 
+                //make the Flight ID textbox read-only
+                txtFlightId.Enabled = false;
+
                 // Populate the flight details
                 txtFlightId.Text = selectedFlight.flightId.ToString();
                 txtFlightCity.Text = selectedFlight.city;
@@ -315,12 +342,25 @@ namespace AirportAppUI
             // Clear any previous errors
             errorProvider.Clear();
 
-            // Validate Passenger ID
-            if (!ValidatePassengerId(txtPassengerId.Text))
+            // Generate Passenger ID
+            int nrPassengers;
+            Passenger[] passengers = adminPassenger.GetPassengers(out nrPassengers);
+
+            int maxPassengerId = 0;
+            if (passengers != null && nrPassengers > 0)
             {
-                errorProvider.SetError(txtPassengerId, "Passenger ID must be a positive integer");
-                return;
+                maxPassengerId = passengers.Take(nrPassengers)
+                                        .Where(p => p != null)
+                                        .Max(p => p.Id);
             }
+            int passengerId = maxPassengerId + 1;
+
+            // Validate Passenger ID
+            //if (!ValidatePassengerId(txtPassengerId.Text))
+            //{
+            //    errorProvider.SetError(txtPassengerId, "Passenger ID must be a positive integer");
+            //    return;
+            //}
 
             // Validate Name
             if (!ValidateName(txtPassengerName.Text))
@@ -339,7 +379,7 @@ namespace AirportAppUI
             // Validate Flight ID
             if (!ValidateFlightId(txtPassengerFlightId.Text))
             {
-                errorProvider.SetError(txtPassengerFlightId, "Flight ID must be a positive integer");
+                errorProvider.SetError(txtPassengerFlightId, "Flight ID must be a real flight");
                 return;
             }
 
@@ -351,7 +391,7 @@ namespace AirportAppUI
             }
 
             // All validations passed, create and add the passenger
-            int passengerId = int.Parse(txtPassengerId.Text);
+            //int passengerId = int.Parse(txtPassengerId.Text);
             string name = txtPassengerName.Text;
             string surname = txtPassengerSurname.Text;
             int flightId = int.Parse(txtPassengerFlightId.Text);
@@ -421,6 +461,7 @@ namespace AirportAppUI
             if (e.IsSelected && e.Item.Tag != null)
             {
                 Passenger selectedPassenger = (Passenger)e.Item.Tag;
+                txtPassengerId.Enabled = false;
 
                 // Populate the passenger details
                 txtPassengerId.Text = selectedPassenger.Id.ToString();
@@ -441,19 +482,36 @@ namespace AirportAppUI
             txtPassengerFlightId.Text = string.Empty;
             txtPassengerSeatNumber.Text = string.Empty;
             checkBoxFrequentFlyer.Checked = false;
+
         }
         #endregion
 
         #region Validation Methods
         private bool ValidateFlightId(string flightIdText)
         {
+            // Basic validation
             if (string.IsNullOrWhiteSpace(flightIdText))
                 return false;
 
-            if (!int.TryParse(flightIdText, out int flightId))
+            if (!int.TryParse(flightIdText, out int flightId) || flightId <= 0)
                 return false;
 
-            return flightId > 0;
+            // Check existence in flights.txt
+            int nrFlights;
+            Flight[] flights = adminFlight.GetFlights(out nrFlights);
+
+            // Ensure there are flights and the array is valid
+            if (flights == null || nrFlights == 0)
+                return false;
+
+            // Check if any flight has this ID
+            for (int i = 0; i < nrFlights; i++)
+            {
+                if (flights[i] != null && flights[i].flightId == flightId)
+                    return true;
+            }
+
+            return false;
         }
 
         private bool ValidateCity(string city)
@@ -502,6 +560,131 @@ namespace AirportAppUI
         private bool ValidateSeatNumber(string seatNumber)
         {
             return !string.IsNullOrWhiteSpace(seatNumber);
+        }
+
+        private void btnUpdateFlight_Click(object sender, EventArgs e)
+        {
+            if (lstFlights.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Please select a flight to update.");
+                return;
+            }
+
+            Flight selectedFlight = (Flight)lstFlights.SelectedItems[0].Tag;
+
+            // Clear any previous errors
+            errorProvider.Clear();
+
+            // Validate Flight ID
+            if (!ValidateFlightId(txtFlightId.Text))
+            {
+                errorProvider.SetError(txtFlightId, "Flight ID must be a positive integer");
+                return;
+            }
+
+            // Validate City
+            if (!ValidateCity(txtFlightCity.Text))
+            {
+                errorProvider.SetError(txtFlightCity, "City name is required");
+                return;
+            }
+
+            // Validate Time
+            if (!ValidateTime(txtFlightTime.Text))
+            {
+                errorProvider.SetError(txtFlightTime, "Time must be a valid number");
+                return;
+            }
+
+            // Validate Gate
+            if (!ValidateGate(txtFlightGate.Text))
+            {
+                errorProvider.SetError(txtFlightGate, "Gate must be a positive integer");
+                return;
+            }
+
+            selectedFlight.city = txtFlightCity.Text;
+            selectedFlight.time = double.Parse(txtFlightTime.Text);
+            selectedFlight.gate = int.Parse(txtFlightGate.Text);
+            selectedFlight.status = CombineFlightStatus();
+            selectedFlight.flightType = rbDeparture.Checked ? FlightType.Departure : FlightType.Arrival;
+
+            adminFlight.UpdateFlight(selectedFlight);
+           
+            LoadFlights();
+            ClearFlightInputs();
+            MessageBox.Show("Flight updated successfully!");
+        }
+
+        private FlightStatus CombineFlightStatus()
+        {
+            FlightStatus status = (FlightStatus)cmbFlightStatus.SelectedItem;
+            foreach (var checkedItem in checkListBoxFlightStatusFlags.CheckedItems)
+            {
+                status |= (FlightStatus)checkedItem;
+            }
+            return status;
+        }
+        private void btnUpdatePassenger_Click(object sender, EventArgs e)
+        {
+            if (lstPassengers.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Please select a passenger to update.");
+                return;
+            }
+
+            Passenger selectedPassenger = (Passenger)lstPassengers.SelectedItems[0].Tag;
+
+
+            // Clear any previous errors
+            errorProvider.Clear();
+
+            // Validate Passenger ID
+            if (!ValidatePassengerId(txtPassengerId.Text))
+            {
+                errorProvider.SetError(txtPassengerId, "Passenger ID must be a positive integer");
+                return;
+            }
+
+            // Validate Name
+            if (!ValidateName(txtPassengerName.Text))
+            {
+                errorProvider.SetError(txtPassengerName, "Name is required");
+                return;
+            }
+
+            // Validate Surname
+            if (!ValidateName(txtPassengerSurname.Text))
+            {
+                errorProvider.SetError(txtPassengerSurname, "Surname is required");
+                return;
+            }
+
+            // Validate Flight ID
+            if (!ValidateFlightId(txtPassengerFlightId.Text))
+            {
+                errorProvider.SetError(txtPassengerFlightId, "Flight ID must be a real flight");
+                return;
+            }
+
+            // Validate Seat Number
+            if (!ValidateSeatNumber(txtPassengerSeatNumber.Text))
+            {
+                errorProvider.SetError(txtPassengerSeatNumber, "Seat number is required");
+                return;
+            }
+
+            
+
+            selectedPassenger.Name = txtPassengerName.Text;
+            selectedPassenger.Surname = txtPassengerSurname.Text;
+            selectedPassenger.FlightId = int.Parse(txtPassengerFlightId.Text);
+            selectedPassenger.SeatNumber = txtPassengerSeatNumber.Text;
+
+            adminPassenger.UpdatePassenger(selectedPassenger);
+            LoadPassengers();
+            ClearPassengerInputs();
+            MessageBox.Show("Passenger updated successfully!");
         }
         #endregion
     }

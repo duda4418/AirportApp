@@ -54,6 +54,7 @@ namespace AirportAppUI
         private TextBox txtSearchFlights;
         private ComboBox cmbFlightSearchType;
         private Button btnSearchFlights;
+        private Button btnUpdateFlight;
         private CheckBox chkShowOnlyOnTime;
         private Button btnClearFlightSearch;
         private ErrorProvider errorProvider;
@@ -77,6 +78,7 @@ namespace AirportAppUI
         private TextBox txtSearchPassengers;
         private Button btnSearchPassengers;
         private Button btnClearPassengerSearch;
+        private Button btnUpdatePassenger;
         private CheckBox chkShowAllPassengers;
         private ComboBox cmbPassengerSearchType;
 
@@ -118,6 +120,7 @@ namespace AirportAppUI
             this.txtSearchFlights = new System.Windows.Forms.TextBox();
             this.cmbFlightSearchType = new System.Windows.Forms.ComboBox();
             this.btnSearchFlights = new System.Windows.Forms.Button();
+            this.btnUpdateFlight = new System.Windows.Forms.Button();
             this.chkShowOnlyOnTime = new System.Windows.Forms.CheckBox();
             this.btnClearFlightSearch = new System.Windows.Forms.Button();
 
@@ -140,6 +143,7 @@ namespace AirportAppUI
             this.txtSearchPassengers = new System.Windows.Forms.TextBox();
             this.btnSearchPassengers = new System.Windows.Forms.Button();
             this.btnClearPassengerSearch = new System.Windows.Forms.Button();
+            this.btnUpdatePassenger = new System.Windows.Forms.Button();
             this.chkShowAllPassengers = new System.Windows.Forms.CheckBox();
 
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
@@ -182,6 +186,7 @@ namespace AirportAppUI
             this.lstFlights.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstFlights.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listViewFlights_ItemSelectionChanged);
             //this.lstFlights.FormattingEnabled = true;
             this.lstFlights.Location = new System.Drawing.Point(6, 150);
             this.lstFlights.Name = "lstFlights";
@@ -377,9 +382,19 @@ namespace AirportAppUI
             this.btnSearchFlights.Click += new System.EventHandler(this.btnSearchFlights_Click);
             this.pnlFlightSearch.Controls.Add(this.btnSearchFlights);
 
+            // Edit Flights Button
+            this.btnUpdateFlight.Location = new System.Drawing.Point(560, 10);
+            this.btnUpdateFlight.Name = "btnUpdateFlight";
+            this.btnUpdateFlight.Size = new System.Drawing.Size(75, 23);
+            this.btnUpdateFlight.TabIndex = 3;
+            this.btnUpdateFlight.Text = "Edit";
+            this.btnUpdateFlight.UseVisualStyleBackColor = true;
+            this.btnUpdateFlight.Click += new System.EventHandler(this.btnUpdateFlight_Click);
+            this.pnlFlightSearch.Controls.Add(this.btnUpdateFlight);
+
             // Show Only On Time Checkbox
             this.chkShowOnlyOnTime.AutoSize = true;
-            this.chkShowOnlyOnTime.Location = new System.Drawing.Point(600, 14);
+            this.chkShowOnlyOnTime.Location = new System.Drawing.Point(640, 14);
             this.chkShowOnlyOnTime.Name = "chkShowOnlyOnTime";
             this.chkShowOnlyOnTime.Size = new System.Drawing.Size(125, 17);
             this.chkShowOnlyOnTime.TabIndex = 4;
@@ -412,6 +427,7 @@ namespace AirportAppUI
             this.lstPassengers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstPassengers.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listViewPassengers_ItemSelectionChanged);
             //this.lstPassengers.FormattingEnabled = true;
             this.lstPassengers.Location = new System.Drawing.Point(6, 150);
             this.lstPassengers.Name = "lstPassengers";
@@ -565,9 +581,19 @@ namespace AirportAppUI
             this.btnClearPassengerSearch.Click += new System.EventHandler(this.btnClearPassengerSearch_Click);
             this.pnlPassengerSearch.Controls.Add(this.btnClearPassengerSearch);
 
+            // Edit Passenger Button
+            this.btnUpdatePassenger.Location = new System.Drawing.Point(430, 10);
+            this.btnUpdatePassenger.Name = "btnUpdatePassenger";
+            this.btnUpdatePassenger.Size = new System.Drawing.Size(75, 23);
+            this.btnUpdatePassenger.TabIndex = 3;
+            this.btnUpdatePassenger.Text = "Edit";
+            this.btnUpdatePassenger.UseVisualStyleBackColor = true;
+            this.btnUpdatePassenger.Click += new System.EventHandler(this.btnUpdatePassenger_Click);
+            this.pnlPassengerSearch.Controls.Add(this.btnUpdatePassenger);
+
             // Show All Passengers Checkbox
             this.chkShowAllPassengers.AutoSize = true;
-            this.chkShowAllPassengers.Location = new System.Drawing.Point(450, 14);
+            this.chkShowAllPassengers.Location = new System.Drawing.Point(520, 14);
             this.chkShowAllPassengers.Name = "chkShowAllPassengers";
             this.chkShowAllPassengers.Size = new System.Drawing.Size(120, 17);
             this.chkShowAllPassengers.TabIndex = 4;

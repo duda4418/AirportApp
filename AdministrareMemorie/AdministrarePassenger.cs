@@ -12,12 +12,31 @@ namespace AdministrareMemorie
     {
         private const int NR_MAX_PASSENGERS = 50;
         private string numeFisier;
+        private Passenger[] passengers;
+        private int nrPassengers;
 
         public AdministrarePassenger(string numeFisier)
         {
             this.numeFisier = numeFisier;
-            Stream streamFisierText = File.Open(numeFisier, FileMode.OpenOrCreate);
-            streamFisierText.Close();
+            passengers = new Passenger[NR_MAX_PASSENGERS];
+            nrPassengers = 0;
+            LoadFromFile();
+            //Stream streamFisierText = File.Open(numeFisier, FileMode.OpenOrCreate);
+            //streamFisierText.Close();
+        }
+        public void LoadFromFile()
+        {
+            if (File.Exists(numeFisier))
+            {
+                using (StreamReader sr = new StreamReader(numeFisier))
+                {
+                    string linie;
+                    while ((linie = sr.ReadLine()) != null)
+                    {
+                        passengers[nrPassengers++] = new Passenger(linie);
+                    }
+                }
+            }
         }
 
         public void AddPassenger(Passenger passenger)
@@ -57,25 +76,30 @@ namespace AdministrareMemorie
             return passengers;
         }
 
-        public Passenger[] GetStudenti(out int nrPassengers)
+        
+        public void UpdatePassenger(Passenger updatedPassenger)
         {
-            Passenger[] studenti = new Passenger[NR_MAX_PASSENGERS];
-
-            // instructiunea 'using' va apela streamReader.Close()
-            using (StreamReader streamReader = new StreamReader(numeFisier))
+            for (int i = 0; i < nrPassengers; i++)
             {
-                string linieFisier;
-                nrPassengers = 0;
-
-                while ((linieFisier = streamReader.ReadLine()) != null)
+                if (passengers[i].Id == updatedPassenger.Id)
                 {
-                    studenti[nrPassengers++] = new Passenger(linieFisier);
+                    passengers[i] = updatedPassenger;
+                    SaveAllPassengers();
+                    break;
                 }
             }
-
-            Array.Resize(ref studenti, nrPassengers);
-
-            return studenti;
         }
+
+        private void SaveAllPassengers()
+        {
+            using (StreamWriter sw = new StreamWriter(numeFisier, false))
+            {
+                for (int i = 0; i < nrPassengers; i++)
+                {
+                    sw.WriteLine(passengers[i].ConversieLaSir_PentruFisier());
+                }
+            }
+        }
+
     }
 }

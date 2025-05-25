@@ -121,5 +121,28 @@ namespace AdministrareMemorie
 
             return new Flight("", 0, 0, FlightStatus.None, FlightType.Unknown, 0);
         }
+        public void UpdateFlight(Flight updatedFlight)
+        {
+            for (int i = 0; i < nrFlights; i++)
+            {
+                if (flights[i].flightId == updatedFlight.flightId)
+                {
+                    flights[i] = updatedFlight;
+                    SaveAllFlights();
+                    break;
+                }
+            }
+        }
+
+        private void SaveAllFlights()
+        {
+            using (StreamWriter sw = new StreamWriter(numeFisier, false))
+            {
+                for (int i = 0; i < nrFlights; i++)
+                {
+                    sw.WriteLine(flights[i].ToStringFisier());
+                }
+            }
+        }
     }
 }
