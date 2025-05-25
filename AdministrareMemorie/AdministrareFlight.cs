@@ -111,7 +111,7 @@ namespace AdministrareMemorie
             return flightList;
         }
 
-        public Flight GetFlightDestination(double time)
+        public Flight GetFlightDestination(DateTime time)
         {
             for (int i = 0; i < this.nrFlights; i++)
             {
@@ -119,7 +119,7 @@ namespace AdministrareMemorie
                     return flights[i];
             }
 
-            return new Flight("", 0, 0, FlightStatus.None, FlightType.Unknown, 0);
+            return new Flight("", DateTime.Now, 0, FlightStatus.None, FlightType.Unknown, 0);
         }
         public void UpdateFlight(Flight updatedFlight)
         {

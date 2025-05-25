@@ -37,7 +37,7 @@ namespace AirportAppUI
         private Label lblFlightCity;
         private TextBox txtFlightCity;
         private Label lblFlightTime;
-        private TextBox txtFlightTime;
+        private DateTimePicker dtpFlightTime;
         private Label lblFlightGate;
         private TextBox txtFlightGate;
         private Label lblFlightStatus;
@@ -103,7 +103,7 @@ namespace AirportAppUI
             this.lblFlightCity = new System.Windows.Forms.Label();
             this.txtFlightCity = new System.Windows.Forms.TextBox();
             this.lblFlightTime = new System.Windows.Forms.Label();
-            this.txtFlightTime = new System.Windows.Forms.TextBox();
+            this.dtpFlightTime = new System.Windows.Forms.DateTimePicker();
             this.lblFlightGate = new System.Windows.Forms.Label();
             this.txtFlightGate = new System.Windows.Forms.TextBox();
             this.lblFlightStatus = new System.Windows.Forms.Label();
@@ -229,23 +229,25 @@ namespace AirportAppUI
             this.lblFlightTime.Text = "Time:";
             this.pnlAddFlight.Controls.Add(this.lblFlightTime);
 
-            this.txtFlightTime.Location = new System.Drawing.Point(309, 12);
-            this.txtFlightTime.Name = "txtFlightTime";
-            this.txtFlightTime.Size = new System.Drawing.Size(80, 20);
-            this.txtFlightTime.TabIndex = 3;
-            this.txtFlightTime.Validating += new System.ComponentModel.CancelEventHandler(this.txtFlightTime_Validating);
-            this.pnlAddFlight.Controls.Add(this.txtFlightTime);
+            this.dtpFlightTime = new System.Windows.Forms.DateTimePicker();
+            this.dtpFlightTime.CustomFormat = "yyyy-MM-dd HH:mm";
+            this.dtpFlightTime.Format = DateTimePickerFormat.Custom;
+            this.dtpFlightTime.Location = new System.Drawing.Point(309, 12);
+            this.dtpFlightTime.Name = "dtpFlightTime";
+            this.dtpFlightTime.Size = new System.Drawing.Size(150, 20);
+            this.dtpFlightTime.TabIndex = 3;
+            this.pnlAddFlight.Controls.Add(this.dtpFlightTime);
 
             // Flight Gate
             this.lblFlightGate.AutoSize = true;
-            this.lblFlightGate.Location = new System.Drawing.Point(395, 15);
+            this.lblFlightGate.Location = new System.Drawing.Point(469, 15);
             this.lblFlightGate.Name = "lblFlightGate";
             this.lblFlightGate.Size = new System.Drawing.Size(33, 13);
             this.lblFlightGate.TabIndex = 4;
             this.lblFlightGate.Text = "Gate:";
             this.pnlAddFlight.Controls.Add(this.lblFlightGate);
 
-            this.txtFlightGate.Location = new System.Drawing.Point(434, 12);
+            this.txtFlightGate.Location = new System.Drawing.Point(505, 12);
             this.txtFlightGate.Name = "txtFlightGate";
             this.txtFlightGate.Size = new System.Drawing.Size(60, 20);
             this.txtFlightGate.TabIndex = 5;
@@ -254,7 +256,7 @@ namespace AirportAppUI
 
             // Flight Status
             this.lblFlightStatus.AutoSize = true;
-            this.lblFlightStatus.Location = new System.Drawing.Point(500, 15);
+            this.lblFlightStatus.Location = new System.Drawing.Point(575, 15);
             this.lblFlightStatus.Name = "lblFlightStatus";
             this.lblFlightStatus.Size = new System.Drawing.Size(40, 13);
             this.lblFlightStatus.TabIndex = 6;
@@ -263,7 +265,7 @@ namespace AirportAppUI
 
             this.cmbFlightStatus.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbFlightStatus.FormattingEnabled = true;
-            this.cmbFlightStatus.Location = new System.Drawing.Point(546, 12);
+            this.cmbFlightStatus.Location = new System.Drawing.Point(620, 12);
             this.cmbFlightStatus.Name = "cmbFlightStatus";
             this.cmbFlightStatus.Size = new System.Drawing.Size(121, 21);
             this.cmbFlightStatus.TabIndex = 7;
@@ -323,7 +325,7 @@ namespace AirportAppUI
             this.pnlAddFlight.Controls.Add(this.txtFlightId);
 
             // Add Flight Button
-            this.btnAddFlight.Location = new System.Drawing.Point(800, 45);
+            this.btnAddFlight.Location = new System.Drawing.Point(620, 45);
             this.btnAddFlight.Name = "btnAddFlight";
             this.btnAddFlight.Size = new System.Drawing.Size(100, 23);
             this.btnAddFlight.TabIndex = 12;
@@ -608,7 +610,7 @@ namespace AirportAppUI
             // CheckedListBox for flight status flags
             this.checkListBoxFlightStatusFlags = new System.Windows.Forms.CheckedListBox();
             this.checkListBoxFlightStatusFlags.FormattingEnabled = true;
-            this.checkListBoxFlightStatusFlags.Location = new System.Drawing.Point(680, 12);
+            this.checkListBoxFlightStatusFlags.Location = new System.Drawing.Point(820, 10);
             this.checkListBoxFlightStatusFlags.Name = "checkListBoxFlightStatusFlags";
             this.checkListBoxFlightStatusFlags.Size = new System.Drawing.Size(120, 64);
             this.checkListBoxFlightStatusFlags.TabIndex = 13;
@@ -617,7 +619,7 @@ namespace AirportAppUI
             // Add a label for it
             Label lblStatusFlags = new Label();
             lblStatusFlags.Text = "Status Flags:";
-            lblStatusFlags.Location = new System.Drawing.Point(680, -5);
+            lblStatusFlags.Location = new System.Drawing.Point(745, 15);
             lblStatusFlags.AutoSize = true;
             this.pnlAddFlight.Controls.Add(lblStatusFlags);
 
@@ -688,23 +690,6 @@ namespace AirportAppUI
             }
         }
 
-        private void txtFlightTime_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtFlightTime.Text))
-            {
-                errorProvider.SetError(txtFlightTime, "Time is required");
-                e.Cancel = true;
-            }
-            else if (!double.TryParse(txtFlightTime.Text, out double time) || time < 0 || time > 23.59)
-            {
-                errorProvider.SetError(txtFlightTime, "Time must be a valid value between 0.00 and 23.59");
-                e.Cancel = true;
-            }
-            else
-            {
-                errorProvider.SetError(txtFlightTime, "");
-            }
-        }
 
         private void txtFlightGate_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {

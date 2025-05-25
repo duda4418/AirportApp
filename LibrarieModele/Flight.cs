@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace LibrarieModele
 {
@@ -32,7 +34,7 @@ namespace LibrarieModele
     public class Flight
     {
         public string city { get; set; }
-        public double time { get; set; }
+        public DateTime time { get; set; }
         public int gate
         {
             get; set;
@@ -49,8 +51,7 @@ namespace LibrarieModele
             {
                 flightId = int.Parse(parts[0]);
                 city = parts[1];
-                time = double.Parse(parts[2]);
-                gate = int.Parse(parts[3]);
+                time = DateTime.ParseExact(parts[2], "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture); gate = int.Parse(parts[3]);
 
                 // Parse the string to FlightStatus enum
                 status = ParseFlightStatus(parts[4]);
@@ -94,7 +95,7 @@ namespace LibrarieModele
 
         public string ToStringFisier()
         {
-            return $"{flightId}{SEPARATOR_PRINCIPAL}{city}{SEPARATOR_PRINCIPAL}{time}{SEPARATOR_PRINCIPAL}{gate}{SEPARATOR_PRINCIPAL}{status}{SEPARATOR_PRINCIPAL}{flightType}";
+            return $"{flightId}{SEPARATOR_PRINCIPAL}{city}{SEPARATOR_PRINCIPAL}{time:yyyy-MM-dd HH:mm}{SEPARATOR_PRINCIPAL}{gate}{SEPARATOR_PRINCIPAL}{status}{SEPARATOR_PRINCIPAL}{flightType}";
         }
 
         public Flight()
@@ -104,7 +105,7 @@ namespace LibrarieModele
             flightType = FlightType.Unknown;
         }
 
-        public Flight(string _city, double _time, int _gate, FlightStatus _status, FlightType _flightType, int _flightId)
+        public Flight(string _city, DateTime _time, int _gate, FlightStatus _status, FlightType _flightType, int _flightId)
         {
             city = _city;
             time = _time;
@@ -115,7 +116,7 @@ namespace LibrarieModele
         }
 
         // Overload constructor to handle string parameters for backward compatibility
-        public Flight(string _city, double _time, int _gate, string _status, string _flightType, int _flightId)
+        public Flight(string _city, DateTime _time, int _gate, string _status, string _flightType, int _flightId)
         {
             city = _city;
             time = _time;

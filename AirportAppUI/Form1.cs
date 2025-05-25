@@ -119,7 +119,7 @@ namespace AirportAppUI
                 {
                     ListViewItem item = new ListViewItem(flights[i].flightId.ToString());
                     item.SubItems.Add(flights[i].city);
-                    item.SubItems.Add(flights[i].time.ToString());
+                    item.SubItems.Add(flights[i].time.ToString("yyyy-MM-dd HH:mm"));
                     item.SubItems.Add(flights[i].gate.ToString());
                     item.SubItems.Add(flights[i].GetStatusString());
                     item.SubItems.Add(flights[i].flightType.ToString());
@@ -186,10 +186,11 @@ namespace AirportAppUI
                 return;
             }
 
+            DateTime selectedTime = dtpFlightTime.Value;
             // Validate Time
-            if (!ValidateTime(txtFlightTime.Text))
+            if (!ValidateTime(selectedTime))
             {
-                errorProvider.SetError(txtFlightTime, "Time must be a valid number");
+                errorProvider.SetError(dtpFlightTime, "Flight time must be in the future");
                 return;
             }
 
@@ -203,7 +204,7 @@ namespace AirportAppUI
             // All validations passed, create and add the flight
             //int flightId = int.Parse(txtFlightId.Text);
             string city = txtFlightCity.Text;
-            double time = double.Parse(txtFlightTime.Text);
+            DateTime time = DateTime.Parse(dtpFlightTime.Text);
             int gate = int.Parse(txtFlightGate.Text);
 
             // Get Flight Status (primary status)
@@ -260,7 +261,7 @@ namespace AirportAppUI
                     // Check if search value is in any of the flight properties
                     match = match || flights[i].flightId.ToString().Contains(searchValue);
                     match = match || flights[i].city.ToLower().Contains(searchValue);
-                    match = match || flights[i].time.ToString().Contains(searchValue);
+                    match = match || flights[i].time.ToString("yyyy-MM-dd HH:mm").Contains(searchValue);
                     match = match || flights[i].gate.ToString().Contains(searchValue);
                     match = match || flights[i].status.ToString().ToLower().Contains(searchValue);
                     match = match || flights[i].flightType.ToString().ToLower().Contains(searchValue);
@@ -292,7 +293,7 @@ namespace AirportAppUI
                 // Populate the flight details
                 txtFlightId.Text = selectedFlight.flightId.ToString();
                 txtFlightCity.Text = selectedFlight.city;
-                txtFlightTime.Text = selectedFlight.time.ToString();
+                dtpFlightTime.Text = selectedFlight.time.ToString();
                 txtFlightGate.Text = selectedFlight.gate.ToString();
 
                 // Set the flight status
@@ -322,7 +323,7 @@ namespace AirportAppUI
         {
             txtFlightId.Text = string.Empty;
             txtFlightCity.Text = string.Empty;
-            txtFlightTime.Text = string.Empty;
+            dtpFlightTime.Text = string.Empty;
             txtFlightGate.Text = string.Empty;
 
             // Reset status and type
@@ -519,15 +520,9 @@ namespace AirportAppUI
             return !string.IsNullOrWhiteSpace(city);
         }
 
-        private bool ValidateTime(string timeText)
+        private bool ValidateTime(DateTime selectedTime)
         {
-            if (string.IsNullOrWhiteSpace(timeText))
-                return false;
-
-            if (!double.TryParse(timeText, out double time))
-                return false;
-
-            return time >= 0 && time < 24.0;
+            return selectedTime > DateTime.Now;
         }
 
         private bool ValidateGate(string gateText)
@@ -588,11 +583,11 @@ namespace AirportAppUI
                 errorProvider.SetError(txtFlightCity, "City name is required");
                 return;
             }
-
+            DateTime selectedTime = dtpFlightTime.Value;
             // Validate Time
-            if (!ValidateTime(txtFlightTime.Text))
+            if (!ValidateTime(selectedTime))
             {
-                errorProvider.SetError(txtFlightTime, "Time must be a valid number");
+                errorProvider.SetError(dtpFlightTime, "Flight time must be in the future");
                 return;
             }
 
@@ -604,7 +599,7 @@ namespace AirportAppUI
             }
 
             selectedFlight.city = txtFlightCity.Text;
-            selectedFlight.time = double.Parse(txtFlightTime.Text);
+            selectedFlight.time = DateTime.Parse(dtpFlightTime.Text);
             selectedFlight.gate = int.Parse(txtFlightGate.Text);
             selectedFlight.status = CombineFlightStatus();
             selectedFlight.flightType = rbDeparture.Checked ? FlightType.Departure : FlightType.Arrival;
